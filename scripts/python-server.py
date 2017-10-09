@@ -46,7 +46,7 @@ class Filter(object):
             self.filters.append(self.__remove_newlines)
         if collapse_spaces:
             self.filters.append(self.__collapse_spaces)
-	
+
     def filter(self, s):
         for f in self.filters:
             s = f(s)
@@ -93,8 +93,8 @@ class ExternalProcessor(object):
 
 class Root(object):
 
-    def __init__(self, moses_home, moses_url, recaser_url, slang, tlang, pretty=False, verbose=0, timeout=-1): 
-        
+    def __init__(self, moses_home, moses_url, recaser_url, slang, tlang, pretty=False, verbose=0, timeout=-1):
+
 	self.filter = Filter(remove_newlines=True, collapse_spaces=True)
         self.moses_url = moses_url
 	self.recaser_url = recaser_url
@@ -105,7 +105,7 @@ class Root(object):
         tokenizer = ['perl',os.path.join(moses_home,"mosesdecoder","scripts","tokenizer","tokenizer.perl"),"-b","-X","-l",slang,'-a']
         detokenizer = ['perl',os.path.join(moses_home,"mosesdecoder","scripts","tokenizer","detokenizer.perl"),"-b","-l",tlang]
 	detruecaser = ['perl',os.path.join(moses_home,"mosesdecoder","scripts","recaser","detruecase.perl"),"-b"]
-	
+
 	self._tokenizer = map(ExternalProcessor, [u' '.join(tokenizer)])
  	self._detokenizer = map(ExternalProcessor,[u' '.join(detokenizer)])
 	self._detruecaser = map(ExternalProcessor,[u' '.join(detruecaser)])
@@ -165,10 +165,10 @@ class Root(object):
         self.log("The server is working on: %s" %repr(raw_src))
         self.log_info("Request before preprocessing: %s" %repr(raw_src))
         translationDict = {"sourceText":raw_src.strip()}
-       
-	lower_src = raw_src.lower() 
+
+	lower_src = raw_src.lower()
 	tokenized_src = self.tokenize(lower_src)
-        
+
 	translation = ''
 
         # query MT engine
@@ -186,7 +186,7 @@ class Root(object):
 		recased_trans=recased_result['text']
 	else:
 		recased_trans=translation
-	
+
 	detokenized_trans = self.detokenize(recased_trans)
 	detruecased_trans = self.detruecase(detokenized_trans)
 	translatedText = self.filter.filter(detruecased_trans)
@@ -222,12 +222,12 @@ class Root(object):
 var app = angular.module("MosesApp", ["ngResource"]);
 app.controller('MosesCtrl', function($scope, $http) {
 	$scope.loading = false;
-	$scope.translate = function(engine, sourcelanguage, targetlanguage) {		
+	$scope.translate = function(engine, sourcelanguage, targetlanguage) {
 		$scope.loading=true;
 		$translatedText="";
 		$http.jsonp('http://localhost:' + location.port + '/translate?callback=JSON_CALLBACK', {
 			params: {
-					q:$scope.sourceText 							
+					q:$scope.sourceText
 				}
 			})
 			.success(function(response){
@@ -238,7 +238,7 @@ app.controller('MosesCtrl', function($scope, $http) {
 				$scope.loading=false;
 				console.log("Error");
 		});
-		
+
   	};
 });
 </script>
@@ -271,22 +271,22 @@ h1, p, textarea {
 	<div class="pb"><a href="http://techiaith.bangor.ac.uk"><img src="http://geiriadur.bangor.ac.uk/skins/GeiriadurBangor/images/uti.jpg"></a></div>
 </div>
 
-<h1>DEMO CYFIEITHU PEIRIANYDDOL ~ MACHINE TRANSLATION DEMO</h1>
+<h1>DEMO TROIDIGEZH EMGEFREEK ~ MACHINE TRANSLATION DEMO</h1>
 
 <div ng-app="MosesApp">
 	<div ng-controller="MosesCtrl">
 		<table width="100%" style="margin:auto"><tr>
 		<td width="45%">
-	        	<textarea ng-model="sourceText" style="width:100%" rows=5 placeholder="Testun i'w gyfieithu"></textarea>	
+	        	<textarea ng-model="sourceText" style="width:100%" rows=5 placeholder="Testun i'w gyfieithu"></textarea>
 		</td>
 		<td width="10%" style="vertical-align:top">
-	                <button ng-click="translate()">Cyfieithu ~ Translate >> </button>
+	                <button ng-click="translate()">Trei&ntilde; >> </button>
 			<img ng-show="loading" src="http://techiaith.cymru/wp-content/uploads/2015/11/ripple.gif"/>
 		</td>
-		<td width="45%" style="vertical-align:top">                	        	
-                	<p ng-bind="translatedText" style="font-size:2em;"></p>                	
-		</td></tr></table>				
-	</div>    
+		<td width="45%" style="vertical-align:top">
+                	<p ng-bind="translatedText" style="font-size:2em;"></p>
+		</td></tr></table>
+	</div>
 </div>
 
 """
@@ -330,4 +330,3 @@ if __name__ == "__main__":
                              slang = args.slang, tlang = args.tlang,
                              pretty = args.pretty,
                              verbose = args.verbose))
-
